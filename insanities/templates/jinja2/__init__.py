@@ -24,4 +24,4 @@ class TemplateEngine(object):
 
     def render(self, template_name, **kw):
         'Interface method'
-        return self.env.get_template(template_name).render(**kw)
+        return Markup(self.env.get_template(template_name).render(**kw))

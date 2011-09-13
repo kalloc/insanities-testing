@@ -5,7 +5,6 @@ import logging
 logger = logging.getLogger(__name__)
 from glob import glob
 from ..web import Response
-from jinja2 import Markup
 
 __all__ = ('Template',)
 
@@ -29,7 +28,7 @@ class Template(object):
         vars = self.globs.copy()
         vars.update(kw)
         resolved_name, engine = self.resolve(template_name)
-        return Markup(engine.render(resolved_name, **vars))
+        return engine.render(resolved_name, **vars)
 
     def resolve(self, template_name):
         pattern = template_name
