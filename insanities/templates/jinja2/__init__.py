@@ -13,7 +13,7 @@ TEMPLATE_DIR = join(CURDIR, 'templates')
 
 
 class TemplateEngine(object):
-    def __init__(self, paths, cache = False, autoescape = False):
+    def __init__(self, paths, cache = False, autoescape = True):
         '''
         paths - list of paths
         '''
