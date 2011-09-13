@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 import jinja2
-
+from jinja2.utils import Markup
 __all__ = ('TemplateEngine', 'TEMPLATE_DIR')
 
 CURDIR = dirname(abspath(__file__))
