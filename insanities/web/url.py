@@ -220,6 +220,7 @@ class Any(Converter):
         if value in self.values:
             return value
         raise ConvertError(self.name, value)
+    to_url = to_python
 
 
 convs_dict = dict((item.name or item.__name__, item) \
