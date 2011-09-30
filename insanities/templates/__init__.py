@@ -44,14 +44,25 @@ class Template(object):
         raise TemplateError('Template or engine for template "%s" not found. Dirs %r' % \
                             (pattern, self.dirs))
 
-    def render_to(self, template_name):
-        'WebHandler'
-        def wrapper(env, data, next_handler):
-            data.env = env
-            return Response(self.render(template_name, **data.as_dict()))
-        return wrapper
+    def render_to(self, template_name, content_type=None):
+        def renderer(env, data, next_handler):
+            vals = dict(
+                env=env,
+            )
+            if content_type:
+                vals['content_type'] = content_type
+            return self.render_to_response(template_name, data.as_dict(),
+                                           **vals)
+        return renderer
 
-    def render_to_response(self, template_name, data, content_type='text/html'):
-        'handy method'
-        return Response(self.render(template_name, **data),
-                        content_type=content_type)
+    def render_to_response(self, template_name, data, env=None,
+                           content_type='text/html'):
+        if env is not None:
+            data['env'] = env
+        response =  Response(self.render(template_name, **data),
+                             content_type=content_type)
+        response.template = dict(
+            name=template_name,
+            data=data,
+        )
+        return response
