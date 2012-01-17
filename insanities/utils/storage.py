@@ -48,3 +48,11 @@ class VersionedStorage(object):
     def __call__(self, **kwargs):
         self.__dict__.update(**kwargs)
         return self
+
+    def _mark( self ):
+        self.__stack.append(self._dict_)
+        return len(self.__stack) - 1
+
+    def _sweep( self, mark ):
+        self._dict_ = self.__stack[mark]
+        del self.__stack[mark:]
