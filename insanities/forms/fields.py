@@ -113,6 +113,10 @@ class BaseField(object):
     def readable(self):
         return 'r' in self.permissions
 
+    @property
+    def render_type(self):
+        return self.widget.render_type
+
     def render(self):
         return self.widget.render(self.raw_value)
 
@@ -178,6 +182,8 @@ class FieldSet(AggregateField):
     Container field aggregating a couple of other different fields
     '''
     template = 'widgets/fieldset'
+    render_type = 'default'
+    
     def __init__(self, name, conv=convs.Converter, fields=[], **kwargs):
         if kwargs.get('parent'):
             conv = conv(field=self)
@@ -244,7 +250,7 @@ class FieldList(AggregateField):
     '''
 
     order = False
-
+    render_type = 'default'
     template = 'fields/fieldlist'
 
     def __init__(self, name, conv=convs.List, field=Field(None),
