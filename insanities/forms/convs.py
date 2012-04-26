@@ -27,7 +27,7 @@ class ValidationError(Exception):
         return self.args[0]
 
     def __repr__(self):
-        return self.messages.encode('utf-8')
+        return self.message.encode('utf-8')
 
 
 class Converter(object):
