@@ -3,28 +3,25 @@
 
 import sys
 
-from insanities.web.core import RequestHandler
-from insanities.web.http import HttpException
+from webob.exc import HTTPException
+from insanities import web
 from debug_dj import technical_500_response
 
 import logging
 logger = logging.getLogger(__name__)
 
-class Debug(RequestHandler):
-    def handle(self, rctx):
+class Debug(object):
+    def handle(self, env, data, nxt):
         try:
-            rctx = rctx.next()
-        except HttpException, e:
+            return nxt(env, data)
+        except HTTPException, e:
             raise e
         except Exception, e:
-            import httplib
-
-            rctx.response.status = httplib.INTERNAL_SERVER_ERROR
             exc_info = sys.exc_info()
-            html = technical_500_response(rctx, *exc_info)
-            rctx.response.write(html)
+            html = technical_500_response(env, *exc_info)
+            response = web.Response(status=500, body=html)
             logger.exception(e)
-        return rctx
+            return response
 
 
 
