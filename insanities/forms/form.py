@@ -65,7 +65,7 @@ class Form(object):
         '''Random ID for given form input'''
         # Time part is repeated in about 3 days period
         time_part = struct.pack('!d', time())[3:]
-        return (time_part+os.urandom(1)).encode('hex')
+        return 'formid_'+(time_part+os.urandom(1)).encode('hex')
 
     @property
     def form(self):
