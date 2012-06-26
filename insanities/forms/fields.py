@@ -220,7 +220,7 @@ class FieldSet(AggregateField):
             try:
                 subvalue = value[field.name]
             except KeyError:
-                print 'Key %s not exist in %r' % (field.name, value)
+                pass
             else:
                 field.set_raw_value(field.from_python(subvalue))
 
