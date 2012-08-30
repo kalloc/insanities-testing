@@ -106,6 +106,7 @@ class Form(object):
             if field.writable:
                 self.python_data[field.name] = field.accept()
             else:
+                field.accept()
                 # readonly field
                 field.set_raw_value(field.from_python(self.python_data[field.name]))
 

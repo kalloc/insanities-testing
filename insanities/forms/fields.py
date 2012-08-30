@@ -230,6 +230,7 @@ class FieldSet(AggregateField):
             if field.writable:
                 result[field.name] = field.accept()
             else:
+                field.accept()
                 # readonly field
                 field.set_raw_value(field.from_python(result[field.name]))
         return self.to_python(result)
@@ -299,6 +300,7 @@ class FieldList(AggregateField):
             #TODO: describe this
             field = self.field(name=str(index))
             if not field.writable:
+                field.accept()
                 # readonly field
                 if index in old:
                     result[field.name] = old[field.name]
