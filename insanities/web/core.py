@@ -104,6 +104,20 @@ class Reverse(object):
             return self.env.namespace
         return ''
 
+    def url_exists(self, name):
+        if name.startswith('.'):
+            local_name = name.lstrip('.')
+            up = len(name) - len(local_name) - 1
+            if up != 0:
+                ns = ''.join(self.namespace.split('.')[:-up])
+            else:
+                ns = self.namespace
+            if ns:
+                name = ns + '.' + local_name
+            else:
+                name = local_name
+        return name in self.urls
+
     def __call__(self, name, **kwargs):
         if name.startswith('.'):
             local_name = name.lstrip('.')
@@ -112,10 +126,12 @@ class Reverse(object):
                 ns = ''.join(self.namespace.split('.')[:-up])
             else:
                 ns = self.namespace
-            name = ns + '.' + local_name
+            if ns:
+                name = ns + '.' + local_name
+            else:
+                name = local_name
 
         data = self.urls[name]
-
         host = u'.'.join(data.get('subdomains', []))
         # path - urlencoded str
         path = ''.join([b(**kwargs) for b in reversed(data['builders'])])
