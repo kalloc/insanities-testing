@@ -160,6 +160,17 @@ class Subdomain(unittest.TestCase):
         self.assertEqual(web.Reverse.from_handler(app)('site'), encoded)
         self.assertNotEqual(web.ask(app, encoded), None)
 
+    def test_host10(self):
+        app = web.cases ( 
+                web.subdomain(u'bla') 
+                    | web.match('/', 'bla') 
+                    | (lambda e,d,n: Response(body='bla') ),
+                web.subdomain(u'localhost')
+                    | web.match('/', 'localhost')
+                    | (lambda e,d,n: Response(body='localhost'))
+                )
+        self.assertEqual(web.ask(app, 'http://bla/').body, 'bla')
+        self.assertEqual(web.ask(app, '/').body, 'localhost')
 
 class Match(unittest.TestCase):
 
