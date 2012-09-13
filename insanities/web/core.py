@@ -134,14 +134,18 @@ class Reverse(object):
         data = self.urls[name]
         host = u'.'.join(data.get('subdomains', []))
 
-        host_splitted = self.env.request.host.split(':')
-        port = host_splitted[1] if len(host_splitted) > 1 else None
-        scheme_port = {'http': '80',
-                       'https': '443'}.get(self.env.request.scheme, '80')
+        if self.env:
+            host_splitted = self.env.request.host.split(':')
+            port = host_splitted[1] if len(host_splitted) > 1 else None
+            scheme_port = {'http': '80',
+                           'https': '443'}.get(self.env.request.scheme, '80')
+            port = port if port != scheme_port else None
+        else:
+            port = None
 
         # path - urlencoded str
         path = ''.join([b(**kwargs) for b in reversed(data['builders'])])
-        return URL(path, host=host, port=port if port != scheme_port else None)
+        return URL(path, host=host, port=port)
 
     @classmethod
     def from_handler(cls, handler, env=None):
