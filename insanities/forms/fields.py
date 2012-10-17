@@ -229,12 +229,10 @@ class FieldSet(AggregateField):
     def accept(self):
         result = self.python_data
         for field in self.fields:
-            if field.writable:
-                result[field.name] = field.accept()
-            else:
-                field.accept()
+            if not field.writable:
                 # readonly field
                 field.set_raw_value(field.from_python(result[field.name]))
+            result[field.name] = field.accept()
         return self.to_python(result)
 
     def render(self):
@@ -303,12 +301,8 @@ class FieldList(AggregateField):
             #TODO: describe this
             field = self.field(name=str(index))
             if not field.writable:
-                field.accept()
-                # readonly field
-                if index in old:
-                    result[field.name] = old[field.name]
-            else:
-                result[field.name] = field.accept()
+                field.set_raw_value(field.from_python(old[field.name]))
+            result[field.name] = field.accept()
         return self.to_python(result)
 
     def set_raw_value(self, value):

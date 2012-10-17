@@ -103,12 +103,10 @@ class Form(object):
         self.files = files or MultiDict()
         self.errors = {}
         for field in self.fields:
-            if field.writable:
-                self.python_data[field.name] = field.accept()
-            else:
-                field.accept()
+            if not field.writable:
                 # readonly field
                 field.set_raw_value(field.from_python(self.python_data[field.name]))
+            self.python_data[field.name] = field.accept()
 
         if not self.is_valid:
             return False
