@@ -227,7 +227,7 @@ class FieldSet(AggregateField):
                 field.set_raw_value(field.from_python(subvalue))
 
     def accept(self):
-        result = self.python_data
+        result = dict(self.python_data)
         for field in self.fields:
             if not field.writable:
                 # readonly field
