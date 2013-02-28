@@ -133,12 +133,14 @@ class Reverse(object):
             scheme_port = {'http': '80',
                            'https': '443'}.get(self.env.request.scheme, '80')
             port = port if port != scheme_port else None
+            scheme = self.env.request.scheme
         else:
             port = None
+            scheme = None
 
         # path - urlencoded str
         path = ''.join([b(**kwargs) for b in reversed(data['builders'])])
-        return URL(path, host=host, port=port)
+        return URL(path, scheme=scheme, host=host, port=port)
 
     @classmethod
     def from_handler(cls, handler, env=None):

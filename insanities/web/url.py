@@ -14,7 +14,7 @@ def urlquote(value):
     return urllib.quote(value.encode('utf-8') if isinstance(value, unicode) else str(value))
 
 
-def construct_url(path, query, host, port, schema):
+def construct_url(path, query, host, port, scheme):
     query = ('?' + '&'.join(['%s=%s' % (urlquote(k), urlquote(v)) \
                             for k,v in query.iteritems()])  \
              if query else '')
@@ -23,14 +23,14 @@ def construct_url(path, query, host, port, schema):
     if host:
         host = host.encode('idna')
         port = ':' + port if port else ''
-        return ''.join((schema, '://', host, port, path,  query))
+        return ''.join((scheme, '://', host, port, path,  query))
     else:
         return path + query
 
 
 class URL(str):
 
-    def __new__(cls, path, query=None, host=None, port=None, schema=None):
+    def __new__(cls, path, query=None, host=None, port=None, scheme=None):
         '''
         path - urlencoded string or unicode object (not encoded at all)
         '''
@@ -38,20 +38,20 @@ class URL(str):
         query = MultiDict(query) if query else MultiDict()
         host = host or ''
         port = port or ''
-        schema = schema or 'http'
+        scheme = scheme or 'http'
         self = str.__new__(cls, construct_url(path, query, host, 
-                                              port,schema))
+                                              port,scheme))
         self.path = path
         self.query = query
         self.host = host
         self.port = port
-        self.schema = schema
+        self.scheme = scheme
         return self
 
     def _copy(self, **kwargs):
         path = kwargs.pop('path', self.path)
         kw = dict(query=self.query, host=self.host, 
-                  port=self.port, schema=self.schema)
+                  port=self.port, scheme=self.scheme)
         kw.update(kwargs)
         return self.__class__(path, **kw)
 
@@ -109,7 +109,7 @@ class URL(str):
         path = urllib.unquote(self.path).decode('utf-8')
         if self.host:
             port = u':' + self.port if self.port else u''
-            return u''.join((self.schema, '://', self.host, port, path,  query))
+            return u''.join((self.scheme, '://', self.host, port, path,  query))
         else:
             return path + query
 
