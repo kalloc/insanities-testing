@@ -14,6 +14,7 @@ class TemplateError(Exception): pass
 
 class Template(object):
     def __init__(self, *dirs, **kwargs):
+        self.debug = kwargs.get('debug', True)  # bool
         self.globs = kwargs.get('globs', {})
         self.cache = kwargs.get('cache', False)
         self.dirs = []
@@ -24,7 +25,8 @@ class Template(object):
             self.engines[template_type] = engine_class(self.dirs[:], cache=self.cache)
 
     def render(self, template_name, **kw):
-        logger.debug('Rendering template "%s"' % template_name)
+        if self.debug:
+            logger.debug('Rendering template "%s"' % template_name)
         vars = self.globs.copy()
         vars.update(kw)
         resolved_name, engine = self.resolve(template_name)
