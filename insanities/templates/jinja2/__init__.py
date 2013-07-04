@@ -20,6 +20,7 @@ class TemplateEngine(object):
         self.env = jinja2.Environment(
             loader = jinja2.FileSystemLoader(paths),
             autoescape = autoescape,
+            extensions=['jinja2.ext.with_'],
         )
 
     def render(self, template_name, **kw):
