@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-import re, logging
+import logging
 
 import widgets
 from . import convs
-from ..utils import weakproxy, cached_property
+from ..utils import cached_property
 from ..utils.odict import OrderedDict
 from .perms import FieldPerm
 from .media import FormMedia
@@ -16,7 +16,7 @@ class BaseField(object):
     '''
     Simple container class which ancestors represents various parts of Form.
 
-    Encapsulates converter, various fields attributes, methods for data 
+    Encapsulates converter, various fields attributes, methods for data
     access control
     '''
 
@@ -83,7 +83,8 @@ class BaseField(object):
         return self.parent.python_data[self.name]
 
     @cached_property
-    def _relative_id(self): # XXX what is this?
+    def _relative_id(self):
+        # XXX what is this?
         return self.form.get_field_id(self)
 
     @property
@@ -131,7 +132,7 @@ class Field(BaseField):
     Atomic field
     '''
 
-    #: :class:`Conv` subclass or instance used to convert field data 
+    #: :class:`Conv` subclass or instance used to convert field data
     #: and validate it
     conv = convs.Char
 
@@ -147,7 +148,12 @@ class Field(BaseField):
         if self.multiple:
             return self.form.raw_data.getall(self.input_name)
         else:
-            return self.form.raw_data.get(self.input_name, '')
+            value = self.form.raw_data.get(self.input_name)
+            if value is None:
+                value = self.get_default()
+            if value is None:
+                value = ''
+            return value
 
     def set_raw_value(self, value):
         raw_data = self.form.raw_data
@@ -199,7 +205,7 @@ class FieldSet(AggregateField):
 
     @property
     def prefix(self):
-        return self.input_name+'.'
+        return self.input_name + '.'
 
     def get_field(self, name):
         names = name.split('.', 1)
@@ -216,8 +222,10 @@ class FieldSet(AggregateField):
         return self.to_python(result)
 
     def set_raw_value(self, value):
-        # fills in raw_data multidict, resulting keys are field's absolute names
-        assert isinstance(value, dict), 'To set raw value need dict, got %r' % value
+        # fills in raw_data multidict,
+        # resulting keys are field's absolute names
+        assert isinstance(value, dict), \
+            'To set raw value need dict, got %r' % value
         for field in self.fields:
             try:
                 subvalue = value[field.name]
@@ -270,7 +278,7 @@ class FieldList(AggregateField):
 
     @property
     def prefix(self):
-        return self.input_name+'-'
+        return self.input_name + '-'
 
     def get_default(self):
         return []
@@ -285,7 +293,7 @@ class FieldList(AggregateField):
 
     @property
     def indeces_input_name(self):
-        return self.input_name+'-indeces'
+        return self.input_name + '-indeces'
 
     def accept(self):
         old = self.python_data
@@ -307,7 +315,7 @@ class FieldList(AggregateField):
 
     def set_raw_value(self, value):
         indeces = []
-        for index in range(1, len(value)+1):
+        for index in range(1, len(value) + 1):
             index = str(index)
             subvalue = value[index]
             subfield = self.field(name=index)
@@ -326,6 +334,7 @@ class FieldList(AggregateField):
         media += self.field.get_media()
         return media
 
+
 class FileField(BaseField):
     '''
     The simpliest file field
@@ -338,8 +347,7 @@ class FileField(BaseField):
         return self.to_python(file)
 
     def get_default(self):
-        return None # XXX
+        return None  # XXX
 
     def set_raw_value(self, value):
         pass
-
