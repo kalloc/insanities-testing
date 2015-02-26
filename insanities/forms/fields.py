@@ -149,7 +149,7 @@ class Field(BaseField):
             return self.form.raw_data.getall(self.input_name)
         else:
             value = self.form.raw_data.get(self.input_name)
-            if value is None:
+            if value is None and self.writable is False:
                 value = self.get_default()
             if value is None:
                 value = ''
