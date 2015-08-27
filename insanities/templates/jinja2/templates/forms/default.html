@@ -6,13 +6,13 @@
   {% if field.render_type == 'checkbox' %}
     {{ field.render()|safe }}
     {% if field.label %}
-    <label for="{{ field.id }}">{{ field.label }}</label>
+    <label for="{{ field.id }}">{{ _(field.label) }}</label>
     {% endif %}
   {% elif field.render_type == 'hidden' %}
     {{ field.render()|safe }}
   {% else %}
     {% if field.label %}
-    <label for="{{ field.id }}">{{ field.label }}</label>
+    <label for="{{ field.id }}">{{ _(field.label) }}</label>
     {% endif %}
     {{ field.render()|safe }}
   {% endif %}

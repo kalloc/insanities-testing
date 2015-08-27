@@ -12,7 +12,7 @@
     <td>
       {{ subfield.render()|safe }}
       {% if subfield.label %}
-      <label for="{{ subfield.id }}">{{ subfield.label }}</label>
+      <label for="{{ subfield.id }}">{{ _(subfield.label) }}</label>
       {% endif %}
     </td>
   {% elif subfield.render_type == 'hidden' %}
@@ -20,14 +20,14 @@
   {% elif subfield.render_type == 'full-width' %}
     <td colspan="2">
       {% if subfield.label %}
-      <p class="th"><label for="{{ subfield.id }}">{{ subfield.label }}</label></p>
+      <p class="th"><label for="{{ subfield.id }}">{{ _(subfield.label) }}</label></p>
       {% endif %}
       {{ subfield.render()|safe }}
     </td>
   {% else %}
     <th>
       {% if subfield.label %}
-      <label for="{{ subfield.id }}">{{ subfield.label }}</label>
+      <label for="{{ subfield.id }}">{{ _(subfield.label) }}</label>
       {% endif %}
     </th>
     <td>
