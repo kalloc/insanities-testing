@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 import cgi
-import string
+import logging
+import os
+import struct
+import tempfile
+import time
 from os import path
-import os, struct, tempfile, time, logging
-import Image
 
-from ..utils import weakproxy, cached_property
-from ..forms import convs, widgets
-from ..forms.fields import Field, FieldSet, FileField
+from ..forms import convs
+from ..forms import widgets
+from ..forms.fields import Field
+from ..forms.fields import FieldSet
+from ..forms.fields import FileField
+from ..utils import cached_property
 
 logger = logging.getLogger(__name__)
 
@@ -215,5 +220,3 @@ class FileFieldSet(FieldSet):
 
     def get_default(self):
         return None # XXX
-
-
